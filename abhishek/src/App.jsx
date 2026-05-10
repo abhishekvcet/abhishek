@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Marquee from './components/Marquee';
 import Projects from './components/Projects';
+import Experience from './components/Experience';
 import Skills from './components/Skills';
 import Education from './components/Education';
 import Achievements from './components/Achievements';
@@ -56,31 +57,56 @@ function App() {
 
   // Lanyard scroll visibility
   const [lanyardVisible, setLanyardVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
+      // Only show lanyard when near the top of the page
       if (currentScrollY < 600) {
         setLanyardVisible(true);
-      } else if (currentScrollY > lastScrollY) {
-        // Scrolling down
-        setLanyardVisible(false);
       } else {
-        // Scrolling up
-        setLanyardVisible(true);
+        setLanyardVisible(false);
       }
-      
-      setLastScrollY(currentScrollY);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  }, []);
+
+  const handleDoubleClick = (e) => {
+    const colors = ['#a3ff47', '#667eea', '#f093fb', '#4facfe', '#fd79a8', '#ffcc33'];
+    const count = 20;
+    
+    for (let i = 0; i < count; i++) {
+      const thread = document.createElement('div');
+      thread.className = 'confetti-thread';
+      
+      // Random physics
+      const tx = (Math.random() - 0.5) * 300 + 'px';
+      const ty = (Math.random() - 0.5) * 300 + 'px';
+      const tr = Math.random() * 720 + 'deg';
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      
+      thread.style.left = e.clientX + 'px';
+      thread.style.top = e.clientY + 'px';
+      thread.style.backgroundColor = color;
+      thread.style.setProperty('--tx', tx);
+      thread.style.setProperty('--ty', ty);
+      thread.style.setProperty('--tr', tr);
+      
+      document.body.appendChild(thread);
+      
+      // Cleanup
+      setTimeout(() => {
+        thread.remove();
+      }, 1200);
+    }
+  };
 
   return (
-    <>
+    <div onDoubleClick={handleDoubleClick}>
+      <Navbar />
       <div className="dotted-bg" />
       {isWebGLSupported && isDesktop && (
         <div className={`lanyard-container ${lanyardVisible ? '' : 'hidden'}`}>
@@ -88,10 +114,10 @@ function App() {
         </div>
       )}
       <div className="app">
-        <Navbar />
         <Hero />
         <Marquee />
         <Projects />
+        <Experience />
         <Skills />
         <Education />
         <Achievements />
@@ -99,7 +125,7 @@ function App() {
         <Contact />
         <Footer />
       </div>
-    </>
+    </div>
   );
 }
 

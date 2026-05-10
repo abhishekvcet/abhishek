@@ -1,104 +1,145 @@
-import { FiExternalLink, FiGithub } from 'react-icons/fi';
+import { useState } from 'react';
+import { FiExternalLink, FiGithub, FiChevronLeft, FiChevronRight, FiArrowRight } from 'react-icons/fi';
+import petx1 from '../assets/petxImg/img1.png';
+import petx2 from '../assets/petxImg/img2.png';
+import petx3 from '../assets/petxImg/img3.png';
+import petx4 from '../assets/petxImg/img4.png';
+import petx5 from '../assets/petxImg/img5.png';
+import petx6 from '../assets/petxImg/img6.png';
+import ep1 from '../assets/EnergyPredImg/img1.jpg';
+import ep2 from '../assets/EnergyPredImg/img2.png';
+import ep3 from '../assets/EnergyPredImg/img3.png';
+import ep4 from '../assets/EnergyPredImg/img4.png';
+import ep5 from '../assets/EnergyPredImg/img5.png';
+import ep6 from '../assets/EnergyPredImg/img6.png';
 
 const projects = [
   {
-    tag: 'IoT Project',
-    title: 'PetX – IoT Pet Feeder',
-    desc: 'Automated Pet Feeding System',
+    company: 'PetX',
+    status: 'Launched',
+    title: 'Designing a smart IoT pet feeder for modern homes',
+    desc: 'Social media • Fintech • B2C • Mobile App • Web App', // Matching reference style
     link: 'https://petx.onrender.com',
-    bullets: [
-      'Developed a real-time IoT-based automated pet feeding system with remote access.',
-      'Built frontend using React and Firebase for real-time control and monitoring.',
-      'Implemented backend services using Node.js for secure device communication.',
-      'Integrated ESP8266 microcontroller for automated hardware-based feeding operations.',
-    ],
     tech: ['React', 'Firebase', 'Node.js', 'ESP8266', 'IoT'],
-    image: null,
+    images: [petx1, petx2, petx3, petx4, petx5, petx6],
+    color: '#667eea' // Theme color for background glow
   },
   {
-    tag: 'Machine Learning',
-    title: 'Energy Consumption Predictor',
-    desc: 'Population-Based Energy Prediction',
+    company: 'EnergyPredict',
+    status: 'In Progress',
+    title: 'Redesigning energy consumption analytics for better sustainability',
+    desc: 'Machine Learning • Analytics • B2B • Dashboard',
     link: 'https://boltai321.vercel.app',
-    bullets: [
-      'Built a Linear Regression model to predict energy consumption based on population data.',
-      'Performed data preprocessing and feature analysis using Pandas and NumPy.',
-      'Visualized trends and correlations using Matplotlib to understand growth patterns.',
-      'Trained and evaluated the model to estimate future energy demand accurately.',
-    ],
     tech: ['Python', 'Pandas', 'NumPy', 'Matplotlib', 'Scikit-learn'],
-    image: null,
+    images: [ep1, ep2, ep3, ep4, ep5, ep6],
+    color: '#f093fb'
   },
   {
-    tag: 'AI / RAG',
-    title: 'Intelligent Codebase Assistant',
-    desc: 'AI-Powered Code Intelligence Platform',
-    link: null,
+    company: 'CodeBase AI',
+    status: 'Beta',
+    title: 'Building an intelligent codebase assistant with deep code understanding',
+    desc: 'AI • RAG • Developer Tools • Web App',
     github: 'https://github.com/abhishekvcet',
-    bullets: [
-      'Built an AI-powered Intelligent Codebase Assistant with AST-aware RAG pipelines.',
-      'Implemented hybrid LLM orchestration for intelligent code analysis.',
-      'Developed semantic debugging capabilities for deep code understanding.',
-      'Automated architecture visualization using Mermaid and ChromaDB.',
-    ],
     tech: ['Python', 'ChromaDB', 'LLM', 'RAG', 'Mermaid', 'AST'],
-    image: null,
+    images: null,
+    color: '#4facfe'
   },
 ];
 
-export default function Projects() {
-  return (
-    <section className="section" id="projects">
-      <div className="section-header">
-        <div>
-          <div className="section-tag">{'{ Projects }'}</div>
-          <h2 className="section-title">Things I&apos;ve Built</h2>
-          <p className="section-subtitle">
-            A showcase of projects spanning IoT, Machine Learning, and AI-powered development tools.
-          </p>
+function ProjectImage({ images, title }) {
+  const [current, setCurrent] = useState(0);
+
+  if (!images || images.length === 0) {
+    return (
+      <div className="mockup-placeholder">
+        <div className="placeholder-content">
+          <span>Web App Mockup</span>
         </div>
       </div>
-      <div className="projects-grid">
+    );
+  }
+
+  const nextSlide = (e) => {
+    e.stopPropagation();
+    setCurrent((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  };
+
+  const prevSlide = (e) => {
+    e.stopPropagation();
+    setCurrent((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  return (
+    <div className="laptop-mockup">
+      <div className="laptop-lid">
+        <div className="laptop-screen">
+          <div className="laptop-carousel" style={{ transform: `translateX(-${current * 100}%)` }}>
+            {images.map((img, idx) => (
+              <img key={idx} src={img} alt={`${title} slide ${idx + 1}`} className="laptop-slide" />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {images.length > 1 && (
+        <div className="carousel-controls">
+          <button className="control-btn prev" onClick={prevSlide} aria-label="Previous">
+            <FiChevronLeft />
+          </button>
+          
+          <div className="external-dots">
+            {images.map((_, idx) => (
+              <span 
+                key={idx} 
+                className={`ext-dot ${current === idx ? 'active' : ''}`}
+                onClick={(e) => { e.stopPropagation(); setCurrent(idx); }}
+              />
+            ))}
+          </div>
+
+          <button className="control-btn next" onClick={nextSlide} aria-label="Next">
+            <FiChevronRight />
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function Projects() {
+  return (
+    <section className="projects-showcase" id="projects">
+      <div className="showcase-header reveal">
+        <div className="section-tag">{'{ Portfolio }'}</div>
+        <h2 className="section-title">Selected Works</h2>
+      </div>
+
+      <div className="projects-list">
         {projects.map((project, i) => (
-          <div className="project-card reveal" key={i}>
-            <div className="project-card-tag">{'{ '}{project.tag}{' }'}</div>
-            <h3 className="project-card-title">{project.title}</h3>
-            <p className="project-card-desc">{project.desc}</p>
-
-            <div className="project-card-image">
-              <div className="placeholder-icon">
-                {project.tag.includes('IoT') && '🐾'}
-                {project.tag.includes('Machine') && '⚡'}
-                {project.tag.includes('AI') && '🧠'}
+          <div className="project-row reveal" key={i} style={{ '--accent-color': project.color }}>
+            <div className="project-content">
+              <div className="project-meta">
+                <span className="project-company" style={{ color: project.color }}>{project.company}</span>
+                {project.status && (
+                  <span className="project-status-badge">
+                    <span className="sparkle">✦</span> {project.status}
+                  </span>
+                )}
               </div>
-              <div className="project-card-overlay">
-                <div className="overlay-links">
-                  {project.link && (
-                    <a href={project.link} target="_blank" rel="noopener noreferrer" className="overlay-link">
-                      <FiExternalLink size={14} /> Live Demo
-                    </a>
-                  )}
-                  {project.github && (
-                    <a href={project.github} target="_blank" rel="noopener noreferrer" className="overlay-link">
-                      <FiGithub size={14} /> Source Code
-                    </a>
-                  )}
-                </div>
+              
+              <h3 className="project-display-title">{project.title}</h3>
+              <p className="project-display-desc">{project.desc}</p>
+              
+              <div className="project-actions">
+                <a href={project.link || project.github} target="_blank" rel="noopener noreferrer" className="project-arrow-link">
+                  <FiArrowRight />
+                </a>
               </div>
             </div>
 
-            <div className="project-card-bullets">
-              {project.bullets.map((bullet, j) => (
-                <div className="project-bullet" key={j}>
-                  <span className="bullet-dot"></span>
-                  <span>{bullet}</span>
-                </div>
-              ))}
-            </div>
-            <div className="project-tech-stack">
-              {project.tech.map((t, j) => (
-                <span className="tech-tag" key={j}>{t}</span>
-              ))}
+            <div className="project-visual">
+              <div className="visual-glow"></div>
+              <ProjectImage images={project.images} title={project.title} />
             </div>
           </div>
         ))}
@@ -106,3 +147,4 @@ export default function Projects() {
     </section>
   );
 }
+
